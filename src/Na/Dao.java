@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 import project.Connect;
 
-
-
 public class Dao {
 	Connection con;
 	PreparedStatement ps;
@@ -59,5 +57,20 @@ public class Dao {
 			e.printStackTrace();
 		}
 		return arr;
+	}
+
+	public void update(ArrayList<Dto> list) {
+		for (int i = 0; i < list.size(); i++) {
+			String sql = "update mafia set win=?,lose=? where id=?";
+			try {
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, list.get(i).getWin());
+				ps.setInt(2, list.get(i).getLose());
+				ps.setString(3, list.get(i).getId());
+				ps.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
