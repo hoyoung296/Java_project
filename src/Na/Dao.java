@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import project.Connect;
 
 public class Dao {
+	Scanner sc = new Scanner(System.in);
 	Connection con;
 	PreparedStatement ps;
 	ResultSet rs;
@@ -17,19 +19,26 @@ public class Dao {
 		con = Connect.getConnect();
 	}
 
-	public int insert(String id, String pwd, String name) {
+	public int insert(String id) {
 		Dto dto;
-		String sql = "insert into mafia values(?,?,?,?,?)";
+		String sql1 = "insert into mafia(id) values(?)";
+		String sql2 = "update mafia set pwd= ?, name=?,win=0,lose=0 where id=?";
 		ResultSet rs;
 		int result = 0;
 		try {
-			ps = con.prepareStatement(sql);
+			ps = con.prepareStatement(sql1);
 			ps.setString(1, id);
-			ps.setString(2, pwd);
-			ps.setString(3, name);
-			ps.setInt(4, 0);
-			ps.setInt(5, 0);
+			ps.executeUpdate();
+			System.out.print("저장 pwd : ");
+			String pwd = sc.next();
+			System.out.print("저장 name : ");
+			String name = sc.next();
+			ps = con.prepareStatement(sql2);
+			ps.setString(1, pwd);
+			ps.setString(2, name);
+			ps.setString(3, id);
 			result = ps.executeUpdate();
+
 		} catch (Exception e) {
 			System.out.println("동일한 아이디 존재");
 			// e.printStackTrace();
@@ -37,12 +46,11 @@ public class Dao {
 		return result;
 	}
 
-	public ArrayList<Dto> join() {
-		String sql = "select * from mafia";
-		ArrayList<Dto> arr = new ArrayList<Dto>();
-
+	public ArrayList<Dto> getlist(String id, ArrayList<Dto> list) {
+		String sql = "select * from mafia where id=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Dto dto = new Dto();
@@ -51,12 +59,12 @@ public class Dao {
 				dto.setName(rs.getString("name"));
 				dto.setWin(rs.getInt("win"));
 				dto.setLose(rs.getInt("lose"));
-				arr.add(dto);
+				list.add(dto);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return arr;
+		return list;
 	}
 
 	public void update(ArrayList<Dto> list) {
@@ -72,5 +80,18 @@ public class Dao {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int delete(String id) {
+		int result = 0;
+		String sql = "delete from mafia where id=?";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, id);
+			result = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
