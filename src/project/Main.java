@@ -1,11 +1,13 @@
 package project;
 
 import java.util.Scanner;
-
+import YJ.*;
+import Na.Service;
 import sodam.Sodamgame_main;
 
 public class Main {
 	public static void main(String[] args) {
+		Service ser=new Service();
 		Sodamgame_main s = new Sodamgame_main();
 		while(true) {
 		Scanner sc = new Scanner(System.in);
@@ -13,21 +15,26 @@ public class Main {
 		System.out.println("1. 방준혁\n2. 허은미\n3. 333 로또\n4. 김영주\n5. 나호영\n6. 프로그램 종료");
 		int num = sc.nextInt();
 		
-			switch(num) {
-			case 1 :
+		switch (num) {
+			case 1:
 				break;
-			case 2 :
+			case 2:
 				break;
 			case 3 : // 박소담 333로또
 				s.disp();
 				break;
-			case 4 :
+			case 4:
+				Yj_DBService game = new Yj_DBServiceImpl();
+				game.display();
 				break;
-			case 5 :
+			case 5:
+				ser.mafia();
 				break;
-			case 6 :
+			case 6:
 				System.out.println("프로그램 종료");
 				return;
+			default:
+				System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
 			}
 		}
 	}
