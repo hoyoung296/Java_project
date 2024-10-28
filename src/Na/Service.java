@@ -12,9 +12,9 @@ public class Service {
 		dao = new Dao();
 	}
 
-	public static int max(int... arr) {
+	public static int max(ArrayList<Integer> vote) {
 		int max = 0;
-		for (int a : arr) {
+		for (int a : vote) {
 			if (a >= max) {
 				max = a;
 			}
@@ -41,6 +41,12 @@ public class Service {
 	public static void Login(Dao dao, ArrayList<Dto> list) {
 		System.out.print("id 입력 : ");
 		String id = sc.next();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getName().equals(id)) {
+				System.out.println("해당 id는 이미 로그인중입니다.");
+				return;
+			}
+		}
 		dao.getlist(id, list);
 		if (list.size() == 0) {
 			System.out.println("해당 아이디는 존재하지 않습니다.");
@@ -69,9 +75,10 @@ public class Service {
 		int citizen = 0, mafia = 0;
 		boolean[] realmafia = new boolean[list.size()];
 		ArrayList<String> nickname = new ArrayList<String>();
-		int[] vote = new int[list.size()];
+		ArrayList<Integer> vote = new ArrayList<Integer>();
 		for (int i = 0; i < list.size(); i++) {
 			nickname.add(list.get(i).getName());
+			vote.add(0);
 		}
 
 		if (list.size() > 8)
@@ -136,25 +143,25 @@ public class Service {
 						for (int i = 0; i < nickname.size(); i++) {
 							System.out.print(nickname.get(i) + "님 입력 : ");
 							int cho = sc.nextInt();
-							vote[cho - 1]++;
+							vote.set(cho - 1, vote.get(cho - 1) + 1);
 						}
 					}
 				}
 
-				for (int i = 0; i < vote.length; i++) {
-					System.out.println(i + 1 + ". " + nickname.get(i) + "님의 득표수 : " + vote[i]);
+				for (int i = 0; i < vote.size(); i++) {
+					System.out.println(i + 1 + ". " + nickname.get(i) + "님의 득표수 : " + vote.get(i));
 				}
 
 				int max = max(vote);
 
 				for (int i = 0; i < nickname.size(); i++) {
 					boolean next = false;
-					if (max == vote[i]) {
+					if (max == vote.get(i)) {
 						for (int j = 0; j < nickname.size(); j++) {
 							if (i == j)
 								continue;
 
-							if (vote[i] == vote[j]) {
+							if (vote.get(i) == vote.get(j)) {
 								System.out.println("투표수 동률이 발생했습니다. 다음 단계로 바로 넘어갑니다.");
 								next = true;
 								break;
@@ -165,6 +172,7 @@ public class Service {
 								if (realmafia[i] == true) {
 									System.out.println(nickname.get(i) + "님은 마피아가 맞습니다.");
 									nickname.remove(i);
+									vote.remove(i);
 									mafia--;
 									next = true;
 								}
@@ -172,6 +180,7 @@ public class Service {
 								else {
 									System.out.println(nickname.get(i) + "님은 마피아가 아닙니다. 무고한 시민이 죽었습니다.");
 									nickname.remove(i);
+									vote.remove(i);
 									citizen--;
 									next = true;
 								}
@@ -200,7 +209,8 @@ public class Service {
 					}
 					System.out.print("번호 입력 : ");
 					int num = sc.nextInt();
-					nickname.remove(num);
+					nickname.remove(num - 1);
+					vote.remove(num - 1);
 					citizen--;
 					System.out.println("간밤에 무고한 시민이 죽었습니다.");
 				}
