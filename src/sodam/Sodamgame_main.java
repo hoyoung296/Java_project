@@ -4,13 +4,29 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Sodamgame_main {
-	public static void main(String[] args) {
+	
+	public void disp() {
+	
+	
 		Scanner input = new Scanner(System.in);
 		Random rdnum = new Random();
-		int num1, num2, num3, and = 0;
+		int num, num1, num2, num3, and = 0;
 		int rdnum1 = rdnum.nextInt(5)+1 ;
 		int rdnum2 = rdnum.nextInt(5)+1 ;
 		int rdnum3 = rdnum.nextInt(5)+1 ;
+		
+		System.out.println("\n"+"▶ 333 로또 게임 ◀");
+		System.out.println("1. 게임시작");
+		System.out.println("2. 초기메뉴로 돌아가기");
+		System.out.print(">>>> ");
+		num = input.nextInt();
+		System.out.println("\n");
+		
+		switch (num) {
+		case 1:
+			
+			
+		
 		
 		System.out.println("☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★");
 		System.out.println("작성한 숫자 3개가 랜덤숫자와 모두 일치하면 당첨입니다.");
@@ -81,7 +97,13 @@ public class Sodamgame_main {
 					(rdnum2 == num1 || rdnum2 == num2 || rdnum2 == num3) && 
 					(rdnum3 == num1 || rdnum3 == num2 || rdnum3 == num3)   ){
 				System.out.println("\n\n"+"☆★☆★☆★☆★☆★☆★☆"+"\n"+"당첨을 축하합니다!!"+"\n"+"☆★☆★☆★☆★☆★☆★☆");
-			}else System.out.println("\n\n"+"☆☆☆☆☆GameOver☆☆☆☆☆");
+			}else System.out.println("\n\n"+"☆☆☆☆☆GameOver☆☆☆☆☆"+"\n");
+			
+			return;
+
+		case 2:
+			return;
+		}
 			
 		
 
