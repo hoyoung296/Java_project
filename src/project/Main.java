@@ -1,13 +1,14 @@
 package project;
 
 import java.util.Scanner;
-import YJ.Yj_DBService;
+
 import Na.Service;
+import YJ.service;
 import sodam.Sodamgame_main;
 
 public class Main {
 	public static void main(String[] args) {
-		Yj_DBService game = new Yj_DBService();
+		YJ.service game =new service();
 		Service ser = new Service();
 		Sodamgame_main s = new Sodamgame_main();
 		Scanner sc = new Scanner(System.in);
