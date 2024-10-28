@@ -9,7 +9,7 @@ public class Yj_DBService {
 //		dao=new Yj_DAO();
 //	}
 	public void display(){
-		Yj_DTO dto=new Yj_DTO();
+		Yj_DTO dto;
 		Yj_DAO dao=new Yj_DAO();
 		Scanner input=new Scanner(System.in);
 		while (true) {
@@ -26,19 +26,30 @@ public class Yj_DBService {
 				dao.gameSetting();
 				boolean game=true;
 				do {
+					dto=new Yj_DTO();
 					System.out.print(dto.getNextWord()+" >>> ");
 					dto.setInputWord(input.next());
+					if (dto.getInputWord()=="종료") {
+						System.out.println("종료");
+						game=false;
+						return;
+					}
 					System.out.println(dto.getInputWord());
 					dto.setFirstWord(dto.getInputWord());
+					
+					//종료 입력시 종료 추가
+					
 					System.out.println(dto.getFirstWord());
+					System.out.println(dto.getInputWord());
+					
 					if (dao.game2()!=0) {
 						System.out.println("패배");
 						game=false;
-						break;
-					}else {
-						dao.game1();
 					}
-				} while (game);
+					else {
+						dao.game1();}
+					
+				}while (game);
 				
 //				dao.newGame();
 //				boolean game=true;

@@ -65,8 +65,159 @@ public class Service {
 		}
 	}
 
-	public static void GameJoin() {
+	public static void GameJoin(ArrayList<Dto> list, Dao dao) {
+		int citizen = 0, mafia = 0;
+		boolean[] realmafia = new boolean[list.size()];
+		ArrayList<String> nickname = new ArrayList<String>();
+		int[] vote = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			nickname.add(list.get(i).getName());
+		}
 
+		if (list.size() > 8)
+			System.out.println("인원수가 8명 초과입니다.");
+
+		else if (list.size() < 4)
+			System.out.println("인원수가 4명 미만입니다.");
+
+		else {
+			System.out.print("참가자 : ");
+			for (int i = 0; i < list.size(); i++) {
+				System.out.print(list.get(i).getName() + "\t");
+			}
+			System.out.println();
+			System.out.println("마피아를 정하겠습니다.");
+			ArrayList<Integer> mafianum = new ArrayList<Integer>();
+			for (int i = 0; i < list.size(); i++) {
+				int a = (int) (Math.random() * list.size()) + 1;
+				if (mafianum.contains(a))
+					i--;
+				else
+					mafianum.add(a);
+			}
+
+			if (4 <= list.size() && list.size() < 6) {
+				for (int i = 0; i < mafianum.size(); i++) {
+					if (mafianum.get(i) == list.size() - 1) {
+						System.out.println(list.get(i).getName() + "님이 마피아입니다.");
+						realmafia[i] = true;
+					}
+				}
+				mafia = 1;
+			}
+
+			else if (6 <= list.size() && list.size() <= 8) {
+				for (int i = 0; i < mafianum.size(); i++) {
+					if (mafianum.get(i) == list.size() - 1 || mafianum.get(i) == list.size() - 3) {
+						System.out.println(list.get(i).getName() + "님이 마피아입니다.");
+						realmafia[i] = true;
+					}
+				}
+				mafia = 2;
+			}
+
+			citizen = list.size() - mafia;
+			while (true) {
+				for (int turn = 1; turn < 6; turn++) {
+					System.out.println("턴 수 : " + turn);
+					for (int i = 0; i < nickname.size(); i++) {
+						System.out.print(nickname.get(i) + " : ");
+						String talk = sc.next();
+					}
+
+					if (turn == 5) {
+						System.out.println("투표 시작하겠습니다.\n각자 마피아라고 생각하는 사람의 번호를 입력해주세요.");
+						for (int i = 0; i < nickname.size(); i++) {
+							System.out.print(i + 1 + ". " + nickname.get(i) + "\t");
+						}
+
+						System.out.println();
+
+						for (int i = 0; i < nickname.size(); i++) {
+							System.out.print(nickname.get(i) + "님 입력 : ");
+							int cho = sc.nextInt();
+							vote[cho - 1]++;
+						}
+					}
+				}
+
+				for (int i = 0; i < vote.length; i++) {
+					System.out.println(i + 1 + ". " + nickname.get(i) + "님의 득표수 : " + vote[i]);
+				}
+
+				int max = max(vote);
+
+				for (int i = 0; i < nickname.size(); i++) {
+					boolean next = false;
+					if (max == vote[i]) {
+						for (int j = 0; j < nickname.size(); j++) {
+							if (i == j)
+								continue;
+
+							if (vote[i] == vote[j]) {
+								System.out.println("투표수 동률이 발생했습니다. 다음 단계로 바로 넘어갑니다.");
+								next = true;
+								break;
+							}
+
+							else if (j == nickname.size() - 1) {
+								System.out.println(nickname.get(i) + "님이 마피아로 지목되었습니다.");
+								if (realmafia[i] == true) {
+									System.out.println(nickname.get(i) + "님은 마피아가 맞습니다.");
+									nickname.remove(i);
+									mafia--;
+									next = true;
+								}
+
+								else {
+									System.out.println(nickname.get(i) + "님은 마피아가 아닙니다. 무고한 시민이 죽었습니다.");
+									nickname.remove(i);
+									citizen--;
+									next = true;
+								}
+							}
+						}
+					}
+
+					if (next)
+						break;
+				}
+
+				if (mafia == 0) {
+					System.out.println("모든 마피아가 죽었습니다. 시민의 승리입니다.");
+					for (int i = 0; i < list.size(); i++) {
+						if (realmafia[i] == true)
+							list.get(i).setLose(list.get(i).getLose() + 1);
+						else
+							list.get(i).setWin(list.get(i).getWin() + 1);
+					}
+					break;
+				} else {
+					System.out.println("밤이 찾아왔습니다.\n마피아는 죽이고 싶은 사람의 번호를 입력해주세요");
+					for (int i = 0; i < nickname.size(); i++) {
+						System.out.print(i + 1 + ". " + nickname.get(i) + "\t");
+						System.out.println();
+					}
+					System.out.print("번호 입력 : ");
+					int num = sc.nextInt();
+					nickname.remove(num);
+					citizen--;
+					System.out.println("간밤에 무고한 시민이 죽었습니다.");
+				}
+
+				if (mafia >= citizen) {
+					System.out.println("시민들이 더 이상 마피아를 죽일 수 없습니다.\n마피아의 승리입니다.");
+					for (int i = 0; i < list.size(); i++) {
+						if (realmafia[i] == true)
+							list.get(i).setWin(list.get(i).getWin() + 1);
+						else
+							list.get(i).setLose(list.get(i).getLose() + 1);
+					}
+					break;
+				}
+			}
+		}
+		dao.update(list);
 	}
 
 	public static void WinLoseSearch(ArrayList<Dto> list) {
@@ -100,8 +251,26 @@ public class Service {
 		}
 	}
 
-	public static void infoDelete() {
+	public static void InfoDelete(ArrayList<Dto> list, Dao dao) {
+		int a = 0;
+		System.out.print("삭제할 id 입력 : ");
+		String id = sc.next();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getName().equals(id)) {
+				System.out.println("로그인 되어있습니다. 로그아웃 먼저 진행헤주세요.");
+				a = 1;
+				break;
+			}
+		}
+		if (a == 1) {
+			return;
+		}
+		int result = dao.delete(id);
+		if (result == 0)
+			System.out.println("해당 id는 존재하지 않습니다.");
 
+		else
+			System.out.println("삭제완료");
 	}
 
 	public void mafia() {
@@ -119,139 +288,7 @@ public class Service {
 				Login(dao, list);
 				break;
 			case 3:
-				int citizen = 0, mafia = 0;
-				boolean[] realmafia = new boolean[list.size()];
-				ArrayList<String> nickname = new ArrayList<String>();
-				int[] vote = new int[list.size()];
-				for (int i = 0; i < list.size(); i++) {
-					nickname.add(list.get(i).getName());
-				}
-
-				if (list.size() > 8)
-					System.out.println("인원수가 8명 초과입니다.");
-
-				else if (list.size() < 4)
-					System.out.println("인원수가 4명 미만입니다.");
-
-				else {
-					System.out.print("참가자 : ");
-					for (int i = 0; i < list.size(); i++) {
-						System.out.print(list.get(i).getName() + "\t");
-					}
-					System.out.println();
-					System.out.println("마피아를 정하겠습니다.");
-					ArrayList<Integer> mafianum = new ArrayList<Integer>();
-					for (int i = 0; i < list.size(); i++) {
-						int a = (int) (Math.random() * list.size()) + 1;
-						if (mafianum.contains(a))
-							i--;
-						else
-							mafianum.add(a);
-					}
-
-					if (4 <= list.size() && list.size() < 6) {
-						for (int i = 0; i < mafianum.size(); i++) {
-							if (mafianum.get(i) == list.size() - 1) {
-								System.out.println(list.get(i).getName() + "님이 마피아입니다.");
-								realmafia[i] = true;
-							}
-						}
-						mafia = 1;
-					}
-
-					else if (6 <= list.size() && list.size() <= 8) {
-						for (int i = 0; i < mafianum.size(); i++) {
-							if (mafianum.get(i) == list.size() - 1 || mafianum.get(i) == list.size() - 3) {
-								System.out.println(list.get(i).getName() + "님이 마피아입니다.");
-								realmafia[i] = true;
-							}
-						}
-						mafia = 2;
-					}
-
-					citizen = list.size() - mafia;
-					while (true) {
-						for (int turn = 1; turn < 6; turn++) {
-							System.out.println("턴 수 : " + turn);
-							for (int i = 0; i < nickname.size(); i++) {
-								System.out.print(nickname.get(i) + " : ");
-								String talk = sc.next();
-							}
-
-							if (turn == 5) {
-								System.out.println("투표 시작하겠습니다.\n각자 마피아라고 생각하는 사람의 번호를 입력해주세요.");
-								for (int i = 0; i < nickname.size(); i++) {
-									System.out.print(i + 1 + ". " + nickname.get(i) + "\t");
-								}
-
-								System.out.println();
-
-								for (int i = 0; i < nickname.size(); i++) {
-									System.out.print(nickname.get(i) + "님 입력 : ");
-									int cho = sc.nextInt();
-									vote[cho - 1]++;
-								}
-							}
-						}
-
-						for (int i = 0; i < vote.length; i++) {
-							System.out.println(vote[i]);
-						}
-
-						int max = max(vote);
-
-						for (int i = 0; i < nickname.size(); i++) {
-							if (max == vote[i]) {
-								System.out.println(nickname.get(i) + "님이 마피아로 지목되었습니다.");
-								if (realmafia[i] == true) {
-									System.out.println(nickname.get(i) + "님은 마피아가 맞습니다.");
-									nickname.remove(i);
-									mafia--;
-								}
-
-								else {
-									System.out.println(nickname.get(i) + "님은 마피아가 아닙니다. 무고한 시민이 죽었습니다.");
-									nickname.remove(i);
-									citizen--;
-								}
-							}
-						}
-
-						if (mafia == 0) {
-							System.out.println("모든 마피아가 죽었습니다. 시민의 승리입니다.");
-							for (int i = 0; i < list.size(); i++) {
-								if (realmafia[i] == true)
-									list.get(i).setLose(list.get(i).getLose() + 1);
-								else
-									list.get(i).setWin(list.get(i).getWin() + 1);
-							}
-							break;
-						} else {
-							System.out.println("밤이 찾아왔습니다.\n마피아는 죽이고 싶은 사람의 번호를 입력해주세요");
-							for (int i = 0; i < nickname.size(); i++) {
-								System.out.print(i + 1 + ". " + nickname.get(i) + "\t");
-								System.out.println();
-							}
-							System.out.print("번호 입력 : ");
-							num = sc.nextInt();
-							nickname.remove(num);
-							citizen--;
-							System.out.println("간밤에 무고한 시민이 죽었습니다.");
-						}
-
-						if (mafia >= citizen) {
-							System.out.println("시민들이 더 이상 마피아를 죽일 수 없습니다.\n마피아의 승리입니다.");
-							for (int i = 0; i < list.size(); i++) {
-								if (realmafia[i] == true)
-									list.get(i).setWin(list.get(i).getWin() + 1);
-								else
-									list.get(i).setLose(list.get(i).getLose() + 1);
-							}
-							break;
-						}
-					}
-				}
-				dao.update(list);
+				GameJoin(list, dao);
 				break;
 			case 4:
 				WinLoseSearch(list);
@@ -260,30 +297,11 @@ public class Service {
 				Logout(list, dao);
 				break;
 			case 6:
-//				int a = 0;
-//				System.out.print("삭제할 id 입력 : ");
-//				id = sc.next();
-//				for (int i = 0; i < list.size(); i++) {
-//					if (list.get(i).getName().equals(id)) {
-//						System.out.println("로그인 되어있습니다. 로그아웃 먼저 진행헤주세요.");
-//						a = 1;
-//						break;
-//					}
-//				}
-//				if (a == 1) {
-//					break;
-//				}
-//				result = dao.delete(id);
-//				if (result == 0)
-//					System.out.println("해당 id는 존재하지 않습니다.");
-//
-//				else
-//					System.out.println("삭제완료");
+				InfoDelete(list, dao);
 				break;
 			case 7:
 				System.out.println("메인메뉴로 돌아갑니다.");
 				return;
-
 			default:
 				System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
 			}
