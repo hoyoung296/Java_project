@@ -12,7 +12,7 @@ public class Connect {
 			String id, pwd, url;
 			id = "c##ghdud024";
 			pwd = "ghdud1532";
-			url = "jdbc:oracle:thin:@192.168.51.92:1521:xe"; // orcl
+			url = "jdbc:oracle:thin:@192.168.51.92:1521:xe";// orcl
 			con = DriverManager.getConnection(url, id, pwd);
 			System.out.println("연결 성공!!!!");
 
