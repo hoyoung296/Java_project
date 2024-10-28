@@ -19,7 +19,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Bang_Service bs = new Bang_ServiceImpl();
 		System.out.println("미니 게임 천국에 오신걸 환영합니다.\n메뉴를 선택해주세요.");
-		System.out.println("1. 방준혁\n2. 허은미\n3. 박소담\n4. 김영주\n5. 나호영\n6. 프로그램 종료");
+		System.out.println("1. 숫자 맞추기\n2. 허은미\n3. 333 로또\n4. 끝말잇기\n5. 마피아 게임\n6. 프로그램 종료");
 		int num = sc.nextInt();
 		while(true) {
 			switch(num) {
