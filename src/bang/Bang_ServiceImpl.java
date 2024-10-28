@@ -15,9 +15,9 @@ public class Bang_ServiceImpl implements Bang_Service{
 	private int t=0,f=0;
 	Scanner input = new Scanner(System.in);
 	int num = 0;
-	boolean bool = true;
+	boolean bool;
 	public void display() {
-
+		bool = true;
 		while (bool) {
 			System.out.println("1.숫자 맞추기 게임 시작");
 			System.out.println("2.결과저장하고 출력하기");
