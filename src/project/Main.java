@@ -1,16 +1,25 @@
 package project;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Scanner;
+
+import bang.Bang_Service;
+import bang.Bang_ServiceImpl;
+
 
 public class Main {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		Bang_Service bs = new Bang_ServiceImpl();
 		System.out.println("미니 게임 천국에 오신걸 환영합니다.\n메뉴를 선택해주세요.");
 		System.out.println("1. 방준혁\n2. 허은미\n3. 박소담\n4. 김영주\n5. 나호영\n6. 프로그램 종료");
 		int num = sc.nextInt();
 		while(true) {
 			switch(num) {
 			case 1 :
+				bs.display();
 				break;
 			case 2 :
 				break;
