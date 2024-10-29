@@ -1,8 +1,13 @@
 package YJ;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class DTO {
+	Scanner input=new Scanner(System.in);
 	private String inputWord,systWord,firstWord,lastWord;
 	private int result;
+	private ArrayList<String> list;
 	
 	public DTO() {}
 	
@@ -16,11 +21,9 @@ public class DTO {
 	public String getLastWord() {
 		return lastWord;
 	}
-	
 	public void setLastWord(String lastWord) {
 		this.lastWord = lastWord.substring(lastWord.length()-1);
 	}
-	
 	public String getInputWord() {
 		return inputWord;
 	}
@@ -45,5 +48,10 @@ public class DTO {
 	public void setResult(int result) {
 		this.result = result;
 	}
-
+	public void setWordList(ArrayList<String> list){
+		this.list=list;
+	}
+	public ArrayList<String> getWordList(){
+		return list;
+	}
 }

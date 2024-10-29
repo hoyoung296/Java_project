@@ -1,16 +1,11 @@
 package project;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Scanner;
-
 import Na.Service;
 import YJ.service;
-import sodam.Sodamgame_main;
-
 import bang.Bang_Service;
 import bang.Bang_ServiceImpl;
+import java.util.Scanner;
+import sodam.Sodamgame_main;
 
 
 public class Main {
