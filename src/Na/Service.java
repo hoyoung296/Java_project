@@ -12,9 +12,9 @@ public class Service {
 		dao = new Dao();
 	}
 
-	public static int max(ArrayList<Integer> vote) {
+	public static int max(int[] arr) {
 		int max = 0;
-		for (int a : vote) {
+		for (int a : arr) {
 			if (a >= max) {
 				max = a;
 			}
@@ -152,7 +152,11 @@ public class Service {
 					System.out.println(i + 1 + ". " + nickname.get(i) + "님의 득표수 : " + vote.get(i));
 				}
 
-				int max = max(vote);
+				int[] arr = new int[vote.size()];
+				for (int i = 0; i < vote.size(); i++) {
+					arr[i] = vote.get(i);
+				}
+				int max = max(arr);
 
 				for (int i = 0; i < nickname.size(); i++) {
 					boolean next = false;
