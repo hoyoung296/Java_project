@@ -1,8 +1,6 @@
 package Na;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Service {
@@ -12,7 +10,7 @@ public class Service {
 		dao = new Dao();
 	}
 
-	public static int max(int[] arr) {
+	public static int max(int... arr) {
 		int max = 0;
 		for (int a : arr) {
 			if (a >= max) {
@@ -129,7 +127,7 @@ public class Service {
 					System.out.println("턴 수 : " + turn);
 					for (int i = 0; i < nickname.size(); i++) {
 						System.out.print(nickname.get(i) + " : ");
-						String talk = sc.next();
+						sc.next();
 					}
 
 					if (turn == 5) {
