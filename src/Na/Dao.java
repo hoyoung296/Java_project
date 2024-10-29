@@ -3,7 +3,6 @@ package Na;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +21,6 @@ public class Dao {
 	public int insert(String id) {
 		String sql1 = "insert into mafia(id) values(?)";
 		String sql2 = "update mafia set pwd= ?, name=?,win=0,lose=0 where id=?";
-		ResultSet rs;
 		int result = 0;
 		try {
 			ps = con.prepareStatement(sql1);
