@@ -12,7 +12,7 @@ public class Service {
 		dao = new Dao();
 	}
 
-	public static int max(int[] arr) {
+	public static int max(int... arr) {
 		int max = 0;
 		for (int a : arr) {
 			if (a >= max) {
