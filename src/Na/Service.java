@@ -22,7 +22,7 @@ public class Service {
 
 	static Scanner sc = new Scanner(System.in);
 
-	public static void GameInfo() {
+	public void GameInfo() {
 		System.out.println("마피아 게임에 오신걸 환영합니다.\n최소 4명에서 최대 8명까지 가능합니다.\n대화는 5턴 동안 진행되며, 투표를 통해 마피아를 색출하세요.\n"
 				+ "시민들의 수가 마피아랑 같아지면 마피아 승리 이전에 마피아 색출에 성공하면 시민의 승리입니다.\n회원가입 및 로그인 먼저 진행해주시고 게임참여 눌러주세요.");
 	}
@@ -36,7 +36,7 @@ public class Service {
 		}
 	}
 
-	public static void Login(Dao dao, ArrayList<Dto> list) {
+	public void Login(Dao dao, ArrayList<Dto> list) {
 		System.out.print("id 입력 : ");
 		String id = sc.next();
 		for (int i = 0; i < list.size(); i++) {
@@ -69,7 +69,7 @@ public class Service {
 		}
 	}
 
-	public static void GameJoin(ArrayList<Dto> list, Dao dao) {
+	public void GameJoin(ArrayList<Dto> list, Dao dao) {
 		int citizen = 0, mafia = 0;
 		boolean[] realmafia = new boolean[list.size()];
 		ArrayList<String> nickname = new ArrayList<String>();
@@ -232,7 +232,7 @@ public class Service {
 		dao.update(list);
 	}
 
-	public static void WinLoseSearch(ArrayList<Dto> list) {
+	public void WinLoseSearch(ArrayList<Dto> list) {
 		if (list.size() == 0)
 			System.out.println("로그인 먼저 진행해주세요");
 
@@ -244,7 +244,7 @@ public class Service {
 		}
 	}
 
-	public static void Logout(ArrayList<Dto> list, Dao dao) {
+	public void Logout(ArrayList<Dto> list, Dao dao) {
 		if (list.size() == 0)
 			System.out.println("로그인 먼저 진행해주세요");
 		else {
@@ -263,7 +263,7 @@ public class Service {
 		}
 	}
 
-	public static void InfoDelete(ArrayList<Dto> list, Dao dao) {
+	public void InfoDelete(ArrayList<Dto> list, Dao dao) {
 		int a = 0;
 		System.out.print("삭제할 id 입력 : ");
 		String id = sc.next();
