@@ -23,33 +23,33 @@ public class service {
 		int menu=input.nextInt();
 		switch (menu) {
 		case 1:
-			
 			dto=dao.gameSetting();
+			System.out.flush();
 			int score=0;
 			boolean game=true;
 			while (game) {
 				dto.setInputWord(input.next()); //유저 대답 입력
-				
-				dto=dao.rightWord(dto.getInputWord());
-				
+				dao.insertWord(dto.getInputWord());
+				dto=dao.rightWord(dto.getInputWord());	
 				if (dto.getResult()<1){
 					dto.setLastWord(dto.getInputWord());
 					dto=dao.findWord(dto.getLastWord(),3);
 					if (dto.getResult()>=1){
 						dto=dao.wordList(dto.getLastWord());
 						System.out.print(" >>> ");
-						dao.insertWord(dto.getInputWord());
 						score++;
-						System.out.println();
+						System.out.print("");
 					}
-					else {game=false;}
-
+					else {dto.setGame("승리");System.out.println();
+					System.out.println(dto.getGame()); game=false;}
+		
 					}
-				else {game=false;}
-
+				else {System.out.println(dto.getGame()); game=false;}
+				
 			}
-			System.out.println("게임 종료");
-			System.out.println(String.format("%d 번 이어나갔습니다.", score));
+			
+			System.out.println();
+			System.out.println(String.format("%d회 동안 진행되었습니다.", score));
 
 			
 			break;
@@ -73,8 +73,10 @@ public class service {
 			switch (menu) {
 			case 1:
 				System.out.println("무작위의 단어가 출력됩니다.");
+				System.out.println("");
 				while (true) {
-					for (int i=0;i<5;i++) {
+					System.out.println();
+					for (int i=0;i<10;i++) {
 						dto= dao.wordList();
 						System.out.println(dto.getSystWord());}
 					
@@ -84,13 +86,16 @@ public class service {
 					dto.setInputWord(input.next());
 					
 					if(dto.getInputWord().equals("다음")){
+						System.out.flush();
 						continue;
 					}
 					if (dto.getInputWord().equals("종료")) {
+						System.out.flush();
 						dao.commit();
 						break;
 					}
-					else {dao.delWord(dto.getInputWord());}
+					else {
+						dao.delWord(dto.getInputWord());}
 				}
 				break;
 			case 2:
@@ -108,19 +113,19 @@ public class service {
 				System.out.println("[1] "+dto.getInputWord()+"를 포함하는 단어");
 				System.out.println("[2] "+dto.getInputWord()+"로 끝나는 단어");
 				System.out.println("[3] "+dto.getInputWord()+"로 시작하는 단어");
-				System.out.println("[4] 취소");
+				System.out.println("[4] "+dto.getInputWord()+"를 검색");
+				System.out.println("[5] 취소");
 				System.out.print(">>>");
 				menu=input.nextInt();
-
+				System.out.flush();
+				System.out.println("\t\t검색 결과");
+				System.out.println("");
 				dto=dao.findWord(dto.getInputWord(),menu);
 
 				for(int i=0;i<dto.getWordList().size();i++) {
 					System.out.println(dto.getWordList().get(i));
 				}
-				
-				
 				break;
-
 			default:
 				break;
 			}
@@ -130,6 +135,7 @@ public class service {
 			display=false;
 			break;
 			}
+		System.out.flush();
 		}
 }
 	

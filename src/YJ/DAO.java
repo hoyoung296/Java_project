@@ -32,12 +32,30 @@ public class DAO {
 				list.add(rs.getString("word"));
 				}
 			dto.setSystWord(list.get(ran.nextInt(list.size())));
+			if (dto.getSystWord().isEmpty()) {
+				throw new Exception();}
+			
 			System.out.print(dto.getSystWord());
 			insertWord(dto.getSystWord());
 		} catch (Exception e) {
-			System.err.println(dto.getLastWord()+"로 시작하는 단어가 없습니다.");
+			System.err.println(dto.getLastWord()+"으로 시작하는 단어가 없습니다.");
+			dto.setGame("승리");
 //			e.printStackTrace();
 		}
+		finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		return dto;
 	}
 	
@@ -61,7 +79,21 @@ public class DAO {
 		} catch (Exception e) {
 			System.err.println("등록할 수 없는 단어입니다.");
 //			e.printStackTrace();
-		}}
+		}finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
+		}
 	
 	public void commit() {
 		String sql="commit";
@@ -70,7 +102,20 @@ public class DAO {
 			rs=ps.executeQuery();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 	}
 	
 	public DTO findWord(String inputSearch,int menu) {
@@ -83,8 +128,11 @@ public class DAO {
 		case 2:
 			sql="select word from word where word like '%"+inputSearch+"'";
 			break;
-		default:
+		case 3:
 			sql="select word from word where word like '"+inputSearch+"%'";
+			break;
+		default:
+			sql="select word from word where word='"+inputSearch+"'";
 			break;
 		}
 		try {
@@ -95,15 +143,29 @@ public class DAO {
 			dto.setResult(ps.executeUpdate());
 			
 			if(dto.getResult()==0) {
-				System.out.println("해당 조건으로 등록된 단어가 없습니다.");
+//				System.out.println("해당 조건으로 등록된 단어가 없습니다.");
 				return dto;}
 
 			dto.setWordList(list);
 			
 		} catch (Exception e) {
 			System.err.println("해당하는 단어를 찾을 수 없습니다.");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
+		finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		return dto;
 	}
 	public DTO wordList() {
@@ -122,6 +184,20 @@ public class DAO {
 			System.err.println("초기화 실패");
 //			e.printStackTrace();
 		}
+		finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		return dto;
 	}
 	
@@ -135,27 +211,45 @@ public class DAO {
 			dto.setResult(ps.executeUpdate());
 			ps.close();
 		}catch (Exception e) {
-			System.err.println("등록 되지 않은 단어입니다.");
+			System.err.println("사전에 등록 되지 않은 단어입니다.");
+			dto.setGame("승리");
 		}
 		try {
-			dto=findWord(inputWord, 1);
-			if (dto.getFirstWord().equals(dto.getLastWord()) && inputWord.length()>1 &&dto.getResult()>=1){
-//				System.out.println();
+			dto=findWord(inputWord, 4);
+			if (dto.getFirstWord().equals(dto.getLastWord()) && inputWord.length()>1 &&dto.getResult()!=0){
 				dto.setResult(0);
 			}
 			else {
+				if(!dto.getFirstWord().equals(dto.getLastWord())) {
+					System.err.println("입력한 단어와 마지막 글자가 같지 않습니다.");
+				}
+				if(inputWord.length()<=1) {
+					System.err.println("한글자는 입력이 불가합니다.");
+				}
+				if(dto.getResult()==0) {
+					System.err.println("사전에 등록되지 않은 단어입니다.");
+				}
 				throw new Exception();
 			}
 		} catch (Exception e) {
 			dto.setResult(1);
-//			System.err.println("ddd");
-		}
+			dto.setGame("패배");
+		}finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		return dto;
 		
-	}
-	public void rigthWord2(String firstWord, String lastWord) {
-		
-	
 	}
 	
 	public DTO insertWord(String inputWord){
@@ -166,6 +260,20 @@ public class DAO {
 		} catch (Exception e) {
 //			e.printStackTrace();
 		}
+		finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		commit();
 		return dto;}
 	
@@ -183,6 +291,19 @@ public class DAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally { 
+			try { 
+			if(rs!=null) 
+			{ 
+			rs.close(); 
+			} 
+			if(ps!=null) 
+			{ 
+			ps.close(); 
+			
+			} 
+			} catch (Exception ex) {} 
+			}  
 		return dto;
 	}
 }

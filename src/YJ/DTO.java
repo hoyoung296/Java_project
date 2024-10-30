@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class DTO {
 	Scanner input=new Scanner(System.in);
-	private String inputWord,systWord,firstWord,lastWord;
+	private String inputWord,systWord,firstWord,lastWord,game;
 	private int result;
 	private ArrayList<String> list;
 	
@@ -17,6 +17,12 @@ public class DTO {
 		this.firstWord=firstWord;
 		this.lastWord=lastWord;
 		this.result=result;
+	}
+	public String getGame() {
+		return game;
+	}
+	public void setGame(String game) {
+		this.game=game;
 	}
 	public String getLastWord() {
 		return lastWord;
