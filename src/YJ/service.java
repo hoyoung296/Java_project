@@ -27,10 +27,12 @@ public class service {
 			System.out.flush();
 			int score=0;
 			boolean game=true;
+			
 			while (game) {
-				dto.setInputWord(input.next()); //유저 대답 입력
+				dto.setInputWord(input.next());
+				dto=dao.rightWord(dto.getInputWord());
 				dao.insertWord(dto.getInputWord());
-				dto=dao.rightWord(dto.getInputWord());	
+				
 				if (dto.getResult()<1){
 					dto.setLastWord(dto.getInputWord());
 					dto=dao.findWord(dto.getLastWord(),3);
@@ -110,10 +112,10 @@ public class service {
 				System.out.print(">>>");
 				dto.setInputWord(input.next());
 				
-				System.out.println("[1] "+dto.getInputWord()+"를 포함하는 단어");
-				System.out.println("[2] "+dto.getInputWord()+"로 끝나는 단어");
-				System.out.println("[3] "+dto.getInputWord()+"로 시작하는 단어");
-				System.out.println("[4] "+dto.getInputWord()+"를 검색");
+				System.out.println("[1] "+dto.getInputWord()+"을/를 포함하는 단어");
+				System.out.println("[2] "+dto.getInputWord()+"으로 끝나는 단어");
+				System.out.println("[3] "+dto.getInputWord()+"으로 시작하는 단어");
+				System.out.println("[4] "+dto.getInputWord()+"을/를 검색");
 				System.out.println("[5] 취소");
 				System.out.print(">>>");
 				menu=input.nextInt();
@@ -122,14 +124,19 @@ public class service {
 				System.out.println("");
 				dto=dao.findWord(dto.getInputWord(),menu);
 
-				for(int i=0;i<dto.getWordList().size();i++) {
-					System.out.println(dto.getWordList().get(i));
+				try {
+					for(int i=0;i<dto.getWordList().size();i++) {
+						System.out.println(dto.getWordList().get(i));
+					}
+					System.out.println();
+				} catch (Exception e) {
+					System.err.println("조건에 맞는 단어를 찾을 수 없습니다.");
 				}
+
 				break;
 			default:
 				break;
 			}
-			
 			break;
 		default:
 			display=false;

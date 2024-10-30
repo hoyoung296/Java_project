@@ -45,15 +45,9 @@ public class DAO {
 		finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 		return dto;
@@ -105,15 +99,9 @@ public class DAO {
 		}finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 	}
@@ -131,8 +119,11 @@ public class DAO {
 		case 3:
 			sql="select word from word where word like '"+inputSearch+"%'";
 			break;
-		default:
+		case 4:
 			sql="select word from word where word='"+inputSearch+"'";
+			break;
+		default:
+			sql="select word from word where word='%"+inputSearch+"%'";
 			break;
 		}
 		try {
@@ -155,17 +146,11 @@ public class DAO {
 		finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
-			}  
+			}   
 		return dto;
 	}
 	public DTO wordList() {
@@ -187,46 +172,77 @@ public class DAO {
 		finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 		return dto;
 	}
 	
 	public DTO rightWord(String inputWord){
-		String sql="select word from word where used=1 and word='"+inputWord+"'";
-		dto.setFirstWord(inputWord);
-		dto.setLastWord(dto.getSystWord());
+		String sql="select word from word where word='"+inputWord+"' and used=1";
 		try {
 			ps=con.prepareStatement(sql);
 			rs=ps.executeQuery();
 			dto.setResult(ps.executeUpdate());
-			ps.close();
+			if (dto.getResult()!=0) {
+				throw new Exception();
+			}
 		}catch (Exception e) {
-			System.err.println("사전에 등록 되지 않은 단어입니다.");
-			dto.setGame("승리");
-		}
+			System.out.println();
+			System.err.println("이미 사용한 단어입니다.");
+			dto.setResult(1);
+			dto.setGame("패배");
+			return dto;
+		}finally { 
+			try { 
+			if(rs!=null) 
+			{rs.close();} 
+			if(ps!=null) 
+			{ps.close();} 
+			} catch (Exception ex) {}
+			}
+//		sql="select word from word where word='"+inputWord+"'";
+//		try {
+//			ps=con.prepareStatement(sql);
+//			rs=ps.executeQuery();
+//			dto.setResult(ps.executeUpdate());
+//			if (dto.getResult()==0) {
+//				throw new Exception();
+//			}
+//		}catch (Exception e) {
+//			System.out.println();
+//			System.err.println("사전에 존재하지 않는 단어입니다.");
+//			dto.setResult(1);
+//			dto.setGame("패배");
+//		}finally { 
+//			try { 
+//			if(rs!=null) 
+//			{rs.close();} 
+//			if(ps!=null) 
+//			{ps.close();
+////			} 
+//			} catch (Exception ex) {}
+//			}
 		try {
-			dto=findWord(inputWord, 4);
-			if (dto.getFirstWord().equals(dto.getLastWord()) && inputWord.length()>1 &&dto.getResult()!=0){
+			dto.setFirstWord(inputWord);
+			dto.setLastWord(dto.getSystWord());
+			dto=findWord(inputWord,4);
+			if (dto.getFirstWord().equals(dto.getLastWord()) && inputWord.length()>1 && dto.getResult()!=0){
 				dto.setResult(0);
 			}
 			else {
 				if(!dto.getFirstWord().equals(dto.getLastWord())) {
+					System.out.println();
 					System.err.println("입력한 단어와 마지막 글자가 같지 않습니다.");
 				}
 				if(inputWord.length()<=1) {
+					System.out.println();
 					System.err.println("한글자는 입력이 불가합니다.");
 				}
 				if(dto.getResult()==0) {
+					System.out.println();
 					System.err.println("사전에 등록되지 않은 단어입니다.");
 				}
 				throw new Exception();
@@ -237,20 +253,16 @@ public class DAO {
 		}finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 		return dto;
 		
 	}
+	
+
 	
 	public DTO insertWord(String inputWord){
 		String sql=String.format("update word set used=1 where word='%s'",inputWord);
@@ -263,15 +275,9 @@ public class DAO {
 		finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 		commit();
@@ -294,14 +300,9 @@ public class DAO {
 		finally { 
 			try { 
 			if(rs!=null) 
-			{ 
-			rs.close(); 
-			} 
+			{rs.close();} 
 			if(ps!=null) 
-			{ 
-			ps.close(); 
-			
-			} 
+			{ps.close(); } 
 			} catch (Exception ex) {} 
 			}  
 		return dto;
