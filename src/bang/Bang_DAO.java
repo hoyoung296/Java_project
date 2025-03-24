@@ -3,7 +3,6 @@ package bang;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -41,6 +40,8 @@ public class Bang_DAO {
 			System.out.println("정수를 입력해주세요");
 			System.out.println("===================");
 		}
+		
+		input.close();
 		return num;
 	}
 	public void answer() {
@@ -72,7 +73,7 @@ public class Bang_DAO {
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, t); //값 넣기
 			ps.setInt(2, f);
-			int push = ps.executeUpdate(); // 업데이트
+			ps.executeUpdate(); // 업데이트
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
